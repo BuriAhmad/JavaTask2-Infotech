@@ -32,6 +32,7 @@ CREATE TABLE inventory_logs (
         REFERENCES products(product_id)
 );
 
+INSERT INTO products(name, category, quantity, price)
 WITH RECURSIVE numbers AS (
     SELECT 1 n
     UNION ALL
@@ -39,7 +40,6 @@ WITH RECURSIVE numbers AS (
     FROM numbers
     WHERE n < 1000
 )
-INSERT INTO products(name, category, quantity, price)
 SELECT
     CONCAT('Product_', n),
     CASE MOD(n, 5)
@@ -53,6 +53,7 @@ SELECT
     ROUND((RAND() * 1000) + 10, 2)
 FROM numbers;
 
+INSERT INTO orders(product_id, quantity, order_date, status)
 WITH RECURSIVE numbers AS (
     SELECT 1 n
     UNION ALL
@@ -60,7 +61,6 @@ WITH RECURSIVE numbers AS (
     FROM numbers
     WHERE n < 1000
 )
-INSERT INTO orders(product_id, quantity, order_date, status)
 SELECT
     FLOOR(RAND() * 1000) + 1,
     FLOOR(RAND() * 10) + 1,
@@ -72,6 +72,7 @@ SELECT
     END
 FROM numbers;
 
+INSERT INTO inventory_logs(product_id, action, quantity, log_time)
 WITH RECURSIVE numbers AS (
     SELECT 1 n
     UNION ALL
@@ -79,7 +80,6 @@ WITH RECURSIVE numbers AS (
     FROM numbers
     WHERE n < 1000
 )
-INSERT INTO inventory_logs(product_id, action, quantity, log_time)
 SELECT
     FLOOR(RAND() * 1000) + 1,
     CASE MOD(n, 2)
@@ -114,4 +114,3 @@ VALUES
 
 INSERT INTO inventory_logs(product_id, action, quantity, log_time)
 VALUES (555, 'STOCK_OUT', 500, NOW());
-

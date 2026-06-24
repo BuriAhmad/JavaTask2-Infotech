@@ -28,7 +28,7 @@ This is a Java console-based inventory management system built using Maven, JDBC
 
 - Java 17
 - Maven
-- MySQL 8.x
+- MySQL 8.4.x
 - JDBC
 - Lombok
 - Java Streams
@@ -71,7 +71,7 @@ By default, `DatabaseConfig` uses:
 
 - `jdbc:mysql://localhost:3306/inventory_system`
 - `root`
-- `root`
+- empty password
 
 ## How to Run
 
