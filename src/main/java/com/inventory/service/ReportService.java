@@ -37,8 +37,13 @@ public class ReportService {
     public List<Product> getLowStockProducts(int threshold) {
         return productDao.findAll()
                 .stream()
+                .filter(product -> product.getQuantity() >= 0)
                 .filter(product -> product.getQuantity() < threshold)
                 .toList();
+    }
+
+    public List<Product> getIntegrityIssueProducts() {
+        return productDao.findNegativeQuantityProducts();
     }
 
     public BigDecimal getTotalInventoryValue() {
@@ -48,4 +53,3 @@ public class ReportService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }
-

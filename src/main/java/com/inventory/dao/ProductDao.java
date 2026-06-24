@@ -56,6 +56,19 @@ public class ProductDao {
         }
     }
 
+    public void setQuantity(int productId, int quantity) {
+        String sql = "UPDATE products SET quantity = ? WHERE product_id = ?";
+
+        try (Connection connection = DatabaseConfig.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, quantity);
+            ps.setInt(2, productId);
+            ps.executeUpdate();
+        } catch (SQLException exception) {
+            throw new DatabaseException("Failed to normalize product quantity.", exception);
+        }
+    }
+
     public Product findById(int productId) {
         String sql = "SELECT * FROM products WHERE product_id = ?";
 
@@ -89,6 +102,22 @@ public class ProductDao {
         }
     }
 
+    public List<Product> findNegativeQuantityProducts() {
+        String sql = "SELECT * FROM products WHERE quantity < 0 ORDER BY product_id";
+        List<Product> products = new ArrayList<>();
+
+        try (Connection connection = DatabaseConfig.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                products.add(mapRowToProduct(rs));
+            }
+            return products;
+        } catch (SQLException exception) {
+            throw new DatabaseException("Failed to load products with negative quantity.", exception);
+        }
+    }
+
     private void setProductStatement(Product product, PreparedStatement ps) throws SQLException {
         ps.setString(1, product.getName());
         ps.setString(2, product.getCategory());
@@ -106,4 +135,3 @@ public class ProductDao {
         );
     }
 }
-

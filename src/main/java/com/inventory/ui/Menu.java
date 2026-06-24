@@ -146,7 +146,8 @@ public class Menu {
             System.out.println("1. Top 5 Expensive Products");
             System.out.println("2. Products By Category");
             System.out.println("3. Low Stock Products");
-            System.out.println("4. Total Inventory Value");
+            System.out.println("4. Integrity Issues");
+            System.out.println("5. Total Inventory Value");
             System.out.println("0. Back");
 
             int choice = InputUtil.readInt("Enter report choice: ");
@@ -154,7 +155,8 @@ public class Menu {
                 case 1 -> printProducts(reportService.getTop5ExpensiveProducts());
                 case 2 -> printCategoryReport(reportService.getProductsByCategory());
                 case 3 -> printProducts(reportService.getLowStockProducts(10));
-                case 4 -> System.out.println("Total inventory value: " + reportService.getTotalInventoryValue());
+                case 4 -> printIntegrityIssues(reportService.getIntegrityIssueProducts());
+                case 5 -> System.out.println("Total inventory value: " + reportService.getTotalInventoryValue());
                 case 0 -> showing = false;
                 default -> System.out.println("Invalid report option.");
             }
@@ -191,7 +193,18 @@ public class Menu {
             System.out.println("No products found.");
             return;
         }
-        groupedProducts.forEach((category, products) ->
-                System.out.println(category + ": " + products.size() + " product(s)"));
+        groupedProducts.forEach((category, products) -> {
+            System.out.println(category + ":");
+            products.forEach(this::printProduct);
+        });
+    }
+
+    private void printIntegrityIssues(List<Product> products) {
+        if (products.isEmpty()) {
+            System.out.println("No integrity issues found.");
+            return;
+        }
+        System.out.println("Products with negative quantity:");
+        products.forEach(this::printProduct);
     }
 }
